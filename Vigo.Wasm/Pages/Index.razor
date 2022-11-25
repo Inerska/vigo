@@ -1,9 +1,25 @@
 ﻿@page "/"
+@using Blazor.Extensions
+@using Blazor.Extensions.Canvas.Canvas2D
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<BECanvas Width="300" Height="400" @ref="_canvasReference"></BECanvas>
 
-Welcome to your new app.
+@code
+{
+    private BECanvasComponent _canvasReference;
+    private Canvas2DContext _context;
 
-<SurveyPrompt Title="How is Blazor working for you?"/>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _context = await _canvasReference.CreateCanvas2DAsync();
+
+        await _context.SetFillStyleAsync("green");
+
+        await _context.FillRectAsync(10, 100, 100, 100);
+
+        await _context.SetFontAsync("48px serif");
+        await _context.StrokeTextAsync("Hello Blazor!!!", 10, 100);
+    }
+}
